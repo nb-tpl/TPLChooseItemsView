@@ -29,7 +29,7 @@
 //添加选择元素视图背景
 -(void)addChooseItemBackView
 {
-    UIImageView * chooseItemsBackView = [[UIImageView alloc] initWithFrame:CGRectMake(0, 64 + 150, self.view.bounds.size.width, 200)];
+    UIImageView * chooseItemsBackView = [[UIImageView alloc] initWithFrame:CGRectMake(0, 64 + 150, self.view.bounds.size.width, 600)];
     chooseItemsBackView.userInteractionEnabled = YES;
     chooseItemsBackView.backgroundColor = [UIColor colorWithWhite:0.975 alpha:1.000];
     [self.view addSubview:chooseItemsBackView];
@@ -46,14 +46,15 @@
     _chooseItemsView.backgroundColor = [UIColor colorWithWhite:0.975 alpha:1.000];
     [chooseItemsBackView addSubview:_chooseItemsView];
     //    _chooseItemsView.titleArray = @[@"全部",@"一段奶粉",@"羊奶粉",@"国产奶粉",@"抗敏"];
-    NSMutableArray * titleArray = [@[@"一"] mutableCopy];
-    [titleArray addObjectsFromArray:@[@"二二",@"三三三",@"四四四四",@"五五五五五",@"六六六六六六",@"七七七七七七七七",@"八八八八八八八八"]];
+    NSArray * titleArray = @[@"1",@"二二",@"三三三",@"四四四四",@"五五五五五",@"六六六六六六",@"七七七七七七七七",@"八八八八八八八八"];
+    NSArray * backImages = @[@"shequ_sheying.png",@"shequ_sheying.png",@"shequ_sheying.png",@"shequ_sheying.png",@"shequ_sheying.png",@"shequ_sheying.png",@"shequ_sheying.png",@"shequ_sheying.png"];
 //    for (MMSTag * tag in _switchType.taglist)
 //    {
 //        [titleArray addObject:tag.tag_name];
 //    }
     
     _chooseItemsView.titleArray = titleArray;
+    _chooseItemsView.backImagesArray = backImages;
     
     _chooseItemsView.itemHeight = 35;
     _chooseItemsView.itemFont = [UIFont systemFontOfSize:17];
@@ -63,12 +64,33 @@
     _chooseItemsView.isNeat = NO;
     _chooseItemsView.isFitLength = NO;
     _chooseItemsView.isMutableChoose = NO;
-    _chooseItemsView.itemChooseColor =  [UIColor colorWithRed:0.389 green:0.670 blue:0.265 alpha:1.000]
 ;
-    _chooseItemsView.itemNormalColor = [UIColor grayColor];
     _chooseItemsView.horizontalMargin = signLabel.frame.origin.x;
     
-    [_chooseItemsView clickedItemIndex:0];
+    
+    _chooseItemsView.itemHorizontalLeftMargin = 10;
+    _chooseItemsView.itemHorizontalRightMargin = 20;
+    
+    _chooseItemsView.clickedChooseItem = ^(TPLChooseItemsView *chooseView, ChooseItem *item) {
+
+    };
+    
+    _chooseItemsView.refresh  = ^(TPLChooseItemsView *chooseView, ChooseItem *item) {
+        
+        if(item.isChoose) {
+            item.layer.borderColor = [UIColor redColor].CGColor;
+            item.textLabel.textColor = [UIColor redColor];
+            item.layer.borderWidth = 1;
+        }else
+        {
+            item.layer.borderColor = [UIColor greenColor].CGColor;
+            item.textLabel.textColor = [UIColor greenColor];
+            item.layer.borderWidth = 1;
+        }        
+    };
+
+    [_chooseItemsView refreshView];
+//    [_chooseItemsView clickedItemIndex:0];
     
     /* tpl 使用方法 */
     
@@ -76,7 +98,7 @@
     UIButton * moreChooseButton = [UIButton buttonWithType:UIButtonTypeCustom];
     moreChooseButton.backgroundColor = [UIColor orangeColor];
     moreChooseButton.frame = CGRectMake(10, chooseItemsBackView.frame.origin.y - 70, 80, 30);
-    [moreChooseButton setTitle:@"多选" forState:UIControlStateNormal];
+    [moreChooseButton setTitle:@"单选" forState:UIControlStateNormal];
     [moreChooseButton addTarget:self action:@selector(moreButtonClicked:) forControlEvents:UIControlEventTouchUpInside];
     [self.view addSubview:moreChooseButton];
     
@@ -111,13 +133,13 @@
 -(void)moreButtonClicked:(id)sender
 {
     UIButton * button = (UIButton*)sender;
-    if ([button.titleLabel.text isEqualToString:@"多选"])
+    if ([button.titleLabel.text isEqualToString:@"单选"])
     {
-        [button setTitle:@"单选" forState:UIControlStateNormal];
+        [button setTitle:@"多选" forState:UIControlStateNormal];
     }
     else
     {
-        [button setTitle:@"多选" forState:UIControlStateNormal];
+        [button setTitle:@"单选" forState:UIControlStateNormal];
     }
 
     _chooseItemsView.isMutableChoose = !_chooseItemsView.isMutableChoose;
@@ -136,6 +158,7 @@
     }
     
     _chooseItemsView.isNeat = !_chooseItemsView.isNeat;
+    [_chooseItemsView refreshView];
 }
 -(void)fitChooseButtonClicked:(id)sender
 {
@@ -150,6 +173,7 @@
     }
     
     _chooseItemsView.isFitLength = !_chooseItemsView.isFitLength;
+    [_chooseItemsView refreshView];
 }
 
 

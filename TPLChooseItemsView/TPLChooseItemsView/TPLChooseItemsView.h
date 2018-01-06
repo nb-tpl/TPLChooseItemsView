@@ -9,17 +9,13 @@
 #import <UIKit/UIKit.h>
 
 
-@interface ChooseItem : UILabel
+@interface ChooseItem : UIImageView
 
+//携带的信息
+@property(nonatomic,strong)NSDictionary * info;
 
-
+@property(nonatomic,strong)UILabel * textLabel;
 @property(nonatomic,assign)BOOL isChoose;
-
-@property(nonatomic,strong)UIColor * chooseColor;
-@property(nonatomic,strong)UIColor * normalColor;
-
-@property(nonatomic,strong)void (^clicked)(ChooseItem * item);
-
 
 -(void)tapOne:(UITapGestureRecognizer * )tapOne;
 
@@ -31,8 +27,12 @@
 
 @interface TPLChooseItemsView : UIImageView
 @property(nonatomic,strong)NSArray   * titleArray;
+//图片,本地图片和URL
+@property(nonatomic,strong)NSArray * backImagesArray;
 @property(nonatomic,readonly)NSArray * chooseArray;
 @property(nonatomic,readonly)NSArray * itemArray;
+//携带信息数组，方便数据多样性
+@property(nonatomic,strong)NSArray * infoArray;
 //多选后拼接的字符串
 @property(nonatomic,readonly)NSString * chooseString;
 
@@ -56,10 +56,10 @@
 //标签的最短长度
 @property(nonatomic,assign)CGFloat itemMixLength;
 //长内容的标签左右边距
-@property(nonatomic,assign)CGFloat itemHorizontalMargin;
+//@property(nonatomic,assign)CGFloat itemHorizontalMargin;
+@property(nonatomic,assign)CGFloat itemHorizontalLeftMargin;
+@property(nonatomic,assign)CGFloat itemHorizontalRightMargin;
 
-@property(nonatomic,strong)UIColor * itemChooseColor;
-@property(nonatomic,strong)UIColor * itemNormalColor;
 
 
 @property(nonatomic,assign)CGFloat horizontalMargin;
@@ -71,10 +71,22 @@
 //标签颜色数组
 @property(nonatomic,strong)NSMutableArray * rowColorArray;
 
+//是否只是用于展示，默认为NO
+@property(nonatomic,assign)BOOL justShow;
+
+
+//点击事件
+@property(nonatomic,copy)void (^clickedChooseItem)(TPLChooseItemsView * chooseView,ChooseItem * item);
+///必须要有
+@property(nonatomic,copy)void (^refresh)(TPLChooseItemsView * chooseView,ChooseItem * item);
+
 
 
 //点击其中元素
 -(void)clickedItemIndex:(NSInteger)index;
+
+//配置完后刷新
+-(void)refreshView;
 
 
 @end
